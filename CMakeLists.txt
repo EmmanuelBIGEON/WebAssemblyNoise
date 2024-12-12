@@ -9,7 +9,9 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --extern-post-js ../src/wa
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s EXPORTED_RUNTIME_METHODS=['ccall','cwrap','UTF8ToString','stringToUTF16']")
 
 include_directories(
-    src/core
+    ${PROJECT_INCLUDE_DIR}
+    src/core/common
+    src/core/shader
     src/util
 )
 
@@ -17,8 +19,9 @@ set(SRCS
     src/main.cpp
 
     src/util/Logger.cpp
-    src/core/CanvasRenderer.cpp
-    src/core/Application.cpp
+    src/core/common/CanvasRenderer.cpp
+    src/core/common/Application.cpp
+    src/core/shader/Shader.cpp
 )
 
 add_executable(WebAssemblyNoise ${SRCS})
