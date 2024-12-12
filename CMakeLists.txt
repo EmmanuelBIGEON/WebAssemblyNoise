@@ -16,7 +16,7 @@ include_directories(
 set(SRCS 
     src/main.cpp
 
-    src/util/log.cpp
+    src/util/Logger.cpp
     src/core/CanvasRenderer.cpp
     src/core/Application.cpp
 )

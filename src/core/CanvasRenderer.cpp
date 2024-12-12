@@ -1,7 +1,7 @@
 #include "CanvasRenderer.h"
 
 #include <GLES2/gl2.h>
-#include <log.h>
+#include <Logger.h>
 
 
 float getElapsedTime() {
@@ -17,12 +17,20 @@ CanvasRenderer::~CanvasRenderer()
 {
 }
 
-void CanvasRenderer::Init()
+bool CanvasRenderer::Init()
 {
     EMSCRIPTEN_WEBGL_CONTEXT_HANDLE emctx = emscripten_webgl_get_current_context();
     EmscriptenWebGLContextAttributes attr;
     emscripten_webgl_init_context_attributes(&attr);
     _contextWebGL = emscripten_webgl_create_context(_canvasID.c_str(), &attr);
+    if(_contextWebGL == 0) {
+        const std::string& error = "CanvasRenderer::Init failed creation of context. CanvasID = " + _canvasID;
+        Logger::Log(error);
+        return false;
+    }
+    const std::string& message = "CanvasRenderer::Init context successfully created. CanvasID = " + _canvasID;
+    Logger::Log(message);
+    return true;
 }
 
 void CanvasRenderer::Render()

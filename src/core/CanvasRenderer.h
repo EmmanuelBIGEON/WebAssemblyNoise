@@ -9,7 +9,7 @@ class CanvasRenderer
         CanvasRenderer(const std::string& canvasID);
         virtual ~CanvasRenderer();
 
-        void Init();
+        bool Init();
         void Render();
 
     protected:
