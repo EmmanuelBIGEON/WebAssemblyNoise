@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(WebAssemblyNoise)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -l embind")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s FULL_ES3")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s MAX_WEBGL_VERSION=2")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --preload-file ../shaders/@/shaders") 
@@ -26,13 +27,20 @@ set(SRCS
     src/core/common/CanvasRenderer.cpp
     src/core/common/Application.cpp
     src/core/common/WebData.cpp
+    src/core/common/WebBindings.cpp
     src/core/shader/Shader.cpp
 )
 
 add_executable(WebAssemblyNoise ${SRCS})
 
+# The bin folder is a now a test folder for those who don't want to use Vue. You can simply http-server ./ it. 
 install (TARGETS WebAssemblyNoise DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/WebAssemblyNoise.wasm DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/WebAssemblyNoise.data DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES src/index.html DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES src/favicon.ico DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+# Install in the vue public directory.
+install (TARGETS WebAssemblyNoise DESTINATION ${PROJECT_FRONTEND_PUBLIC_DIR})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/WebAssemblyNoise.wasm DESTINATION ${PROJECT_FRONTEND_PUBLIC_DIR})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/WebAssemblyNoise.data DESTINATION ${PROJECT_FRONTEND_PUBLIC_DIR})

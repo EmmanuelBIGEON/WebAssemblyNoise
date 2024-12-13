@@ -2,6 +2,8 @@
 
 #include <glm/ext.hpp>
 
+#include <string>
+
 enum ShaderID
 {
     ShaderID_DEFAULT = 1
@@ -25,10 +27,15 @@ class Shader
         void SetMat3(const char* name, const glm::mat3& value) const;
         void SetMat4(const char* name, const glm::mat4& value) const;
 
+        std::string shaderName;
         unsigned int shaderID; // Different than the enum ShaderID, this one comes from OpenGL
+
+        void UpdateFragmentShader(const std::string& fragmentCode);
+        std::string GetFragmentCode();
 
         static void InitShaders();
         static Shader* GetShader(ShaderID shader);
+        static std::string GetShadersListJSON(); // produce a JSON List of the available shaders 
 
         static void UpdateResolution(const glm::vec2& resolution);
         static void UpdateResolution(unsigned int width, unsigned int height);
@@ -37,5 +44,15 @@ class Shader
 
     protected:
         static Shader* shader_default;
+        
+        std::string _vertexCode;
+        std::string _fragmentCode;
+        unsigned int _vertexShader;
+        unsigned int _fragmentShader;
 
+        // Remembering uniforms for recompilation.
+    private:
+    
+        static glm::vec2 remembered_resolution;
+        static float remembered_time;
 };

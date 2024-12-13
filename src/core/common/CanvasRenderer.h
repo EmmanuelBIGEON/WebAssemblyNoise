@@ -12,6 +12,9 @@ class CanvasRenderer
         CanvasRenderer(const std::string& canvasID, ShaderID shaderID = ShaderID_DEFAULT);
         virtual ~CanvasRenderer();
 
+        void SetShaderID(ShaderID);
+        ShaderID GetShaderID();
+
         bool Init();
         void Render();
 

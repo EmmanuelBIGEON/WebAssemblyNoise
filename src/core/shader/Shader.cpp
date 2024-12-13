@@ -6,12 +6,15 @@
 #include <sstream>
 
 #include <glm/ext.hpp>
+#include <nlohmann/json.hpp>
 
 #include <WebData.h>
 
 Shader* Shader::shader_default = nullptr;
+glm::vec2 Shader::remembered_resolution = glm::vec2();
+float Shader::remembered_time = 1.0f;
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath)
+Shader::Shader(const char* vertexPath, const char* fragmentPath) : shaderName("Default")
 {
     std::string vertexCode;
     std::string fragmentCode;
@@ -27,39 +30,39 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     vShaderFile.close();
     fShaderFile.close();
 
-    vertexCode = vShaderStream.str();
-    fragmentCode = fShaderStream.str();
+    _vertexCode = vShaderStream.str();
+    _fragmentCode = fShaderStream.str();
 
-    const char* vertexCodeStr = vertexCode.c_str();
-    const char* fragmentCodeStr = fragmentCode.c_str();
+    const char* vertexCodeStr = _vertexCode.c_str();
+    const char* fragmentCodeStr = _fragmentCode.c_str();
 
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexCodeStr, NULL);
-    glCompileShader(vertexShader);
+    _vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(_vertexShader, 1, &vertexCodeStr, NULL);
+    glCompileShader(_vertexShader);
 
     int success;
     char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(_vertexShader, GL_COMPILE_STATUS, &success);
     if (!success)
     {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        glGetShaderInfoLog(_vertexShader, 512, NULL, infoLog);
         Logger::Log("ERROR::SHADER::VERTEX::COMPILATION_FAILED" + std::string(infoLog));
     }
 
-    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentCodeStr, NULL);
-    glCompileShader(fragmentShader);
+    _fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(_fragmentShader, 1, &fragmentCodeStr, NULL);
+    glCompileShader(_fragmentShader);
 
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(_fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success)
     {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        glGetShaderInfoLog(_fragmentShader, 512, NULL, infoLog);
         Logger::Log("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED" + std::string(infoLog));
     }
 
     shaderID = glCreateProgram();
-    glAttachShader(shaderID, vertexShader);
-    glAttachShader(shaderID, fragmentShader);
+    glAttachShader(shaderID, _vertexShader);
+    glAttachShader(shaderID, _fragmentShader);
     glLinkProgram(shaderID);
 
     glGetProgramiv(shaderID, GL_LINK_STATUS, &success);
@@ -70,13 +73,16 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     }
     
     Logger::Log("Shader created.");
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
 }
 
 Shader::~Shader()
 {
+}
+
+
+std::string Shader::GetFragmentCode()
+{
+    return _fragmentCode;
 }
 
 void Shader::Use()
@@ -134,6 +140,7 @@ void Shader::SetMat4(const char* name, const glm::mat4& value) const
 void Shader::InitShaders()
 {
     shader_default = new Shader("shaders/default.vs", "shaders/default.fs");
+    shader_default->shaderName = "Default";
 }
 
 Shader* Shader::GetShader(ShaderID shader)
@@ -148,8 +155,20 @@ Shader* Shader::GetShader(ShaderID shader)
     }
 }
 
+std::string Shader::GetShadersListJSON()
+{
+    nlohmann::json json = {
+        {
+            {"name", shader_default->shaderName},
+            {"id", ShaderID_DEFAULT}
+        }
+    };
+    return json.dump();
+}
+
 void Shader::UpdateResolution(const glm::vec2& resolution)
 {
+    Shader::remembered_resolution = resolution;
     if (shader_default != nullptr)
     {
         shader_default->Use();
@@ -164,9 +183,48 @@ void Shader::UpdateResolution(unsigned int width, unsigned int height)
 
 void Shader::UpdateTime(const float& time)
 {
+    Shader::remembered_time = time;
     if (shader_default != nullptr)
     {
         shader_default->Use();
         shader_default->SetFloat("time", time);
     }
+}
+
+void Shader::UpdateFragmentShader(const std::string& fragmentCode)
+{
+    const char* fragmentCodeCstr = fragmentCode.c_str();
+    unsigned int newFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(newFragmentShader, 1, &fragmentCodeCstr, NULL);
+    glCompileShader(newFragmentShader);
+
+    int success;
+    char infoLog[512];
+    glGetShaderiv(newFragmentShader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        glGetShaderInfoLog(newFragmentShader, 512, NULL, infoLog);
+        Logger::Log("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED" + std::string(infoLog));
+        return;
+    }
+
+    glDetachShader(shaderID, _fragmentShader);
+    glAttachShader(shaderID, newFragmentShader);
+    glLinkProgram(shaderID);
+
+    // Check link status
+    glGetProgramiv(shaderID, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(shaderID, 512, nullptr, infoLog);
+        Logger::Log("ERROR::SHADER::PROGRAM::LINKING_FAILED" + std::string(infoLog));
+        return;
+    }
+
+    // Update uniforms
+    UpdateResolution(Shader::remembered_resolution);
+    UpdateTime(Shader::remembered_time);
+
+    glDeleteShader(_fragmentShader);
+    _fragmentShader = newFragmentShader;
+    _fragmentCode = fragmentCode;
 }

@@ -38,3 +38,10 @@ void Application::RenderAll()
         canvas->Render();
     }
 }
+
+
+std::shared_ptr<CanvasRenderer> Application::GetRenderer()
+{
+    if(_canvasList.empty()) return nullptr;
+    return _canvasList.front();
+}

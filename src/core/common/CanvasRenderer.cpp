@@ -18,6 +18,16 @@ CanvasRenderer::~CanvasRenderer()
 {
 }
 
+void CanvasRenderer::SetShaderID(ShaderID shaderID)
+{
+    _shaderID = shaderID;
+}
+
+ShaderID CanvasRenderer::GetShaderID()
+{
+    return _shaderID;
+}
+
 bool CanvasRenderer::Init()
 {
     glGenVertexArrays(1, &_VAO);

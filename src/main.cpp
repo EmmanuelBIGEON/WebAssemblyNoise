@@ -24,7 +24,7 @@ int main(int argc, char**argv)
 
     Application* app = Application::GetApp();
 
-    app->AddCanvas("#canvas");     
+    app->AddCanvas("#canvas");
 
     emscripten_set_main_loop([](){ Application::GetApp()->RenderAll(); }, 0, 1);
     return 0;
