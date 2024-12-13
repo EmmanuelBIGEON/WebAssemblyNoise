@@ -7,6 +7,8 @@
 
 #include <glm/ext.hpp>
 
+#include <WebData.h>
+
 Shader* Shader::shader_default = nullptr;
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
@@ -144,4 +146,18 @@ Shader* Shader::GetShader(ShaderID shader)
             throw new std::runtime_error("Couldn't find shader.");
             return nullptr;
     }
+}
+
+void Shader::UpdateResolution(const glm::vec2& resolution)
+{
+    if (shader_default != nullptr)
+    {
+        shader_default->Use();
+        shader_default->SetVec2("resolution", resolution);
+    }
+}
+
+void Shader::UpdateResolution(unsigned int width, unsigned int height)
+{
+    UpdateResolution(glm::vec2(width, height));
 }

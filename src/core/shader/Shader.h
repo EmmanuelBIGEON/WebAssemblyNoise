@@ -30,6 +30,8 @@ class Shader
         static void InitShaders();
         static Shader* GetShader(ShaderID shader);
 
+        static void UpdateResolution(const glm::vec2& resolution);
+        static void UpdateResolution(unsigned int width, unsigned int height);
     protected:
         static Shader* shader_default;
 

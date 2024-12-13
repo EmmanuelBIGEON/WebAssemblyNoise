@@ -2,6 +2,7 @@
 #include <Shader.h>
 #include <Directory.h>
 #include <Logger.h>
+#include <WebData.h>
 
 #include <emscripten.h>
 #include <iostream>
@@ -17,9 +18,11 @@ int main(int argc, char**argv)
     // DumpGLInfo(); 
 
     Shader::InitShaders();
+    Shader::UpdateResolution(WebData::GetCanvaWidth(), WebData::GetCanvaHeight());
 
     Application* app = Application::GetApp();
-    app->AddCanvas("#canvas");
+ 
+    app->AddCanvas("#canvas");     
 
     emscripten_set_main_loop([](){ Application::GetApp()->RenderAll(); }, 0, 1);
     return 0;

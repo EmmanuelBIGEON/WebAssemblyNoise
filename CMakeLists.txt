@@ -24,6 +24,7 @@ set(SRCS
     src/util/Logger.cpp
     src/core/common/CanvasRenderer.cpp
     src/core/common/Application.cpp
+    src/core/common/WebData.cpp
     src/core/shader/Shader.cpp
 )
 

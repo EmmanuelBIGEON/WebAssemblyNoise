@@ -17,7 +17,7 @@ class Application
         virtual ~Application();
 
         void AddCanvas(std::shared_ptr<CanvasRenderer> ptr);
-        void AddCanvas(const std::string& canvasID);
+        std::shared_ptr<CanvasRenderer> AddCanvas(const std::string& canvasID);
 
         void RenderAll();
 

@@ -15,11 +15,12 @@ void Application::AddCanvas(std::shared_ptr<CanvasRenderer> ptr)
     _canvasList.push_back(ptr);
 }
 
-void Application::AddCanvas(const std::string& canvasID)
+std::shared_ptr<CanvasRenderer> Application::AddCanvas(const std::string& canvasID)
 {
     std::shared_ptr<CanvasRenderer> canvasRenderer = std::make_shared<CanvasRenderer>(canvasID);
-    if(!canvasRenderer->Init()) return;
+    if(!canvasRenderer->Init()) return nullptr;
     _canvasList.push_back(canvasRenderer);
+    return canvasRenderer;
 }
 
 void Application::RenderAll()
