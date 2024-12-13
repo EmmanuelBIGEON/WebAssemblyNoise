@@ -1,9 +1,13 @@
 #include "Application.h"
 
+#include <Shader.h>
+#include <Logger.h>
+
 Application* Application::instance = nullptr;
 
 Application::Application() : _canvasList({})
 {
+    _chrono.Start();
 }
 
 Application::~Application()
@@ -25,6 +29,10 @@ std::shared_ptr<CanvasRenderer> Application::AddCanvas(const std::string& canvas
 
 void Application::RenderAll()
 {
+    // update uniform time.
+    const auto& timeElapsed = _chrono.GetCurrentDuration();
+    Shader::UpdateTime(timeElapsed);  
+
     for(const auto& canvas : _canvasList)
     {
         canvas->Render();

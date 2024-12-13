@@ -161,3 +161,12 @@ void Shader::UpdateResolution(unsigned int width, unsigned int height)
 {
     UpdateResolution(glm::vec2(width, height));
 }
+
+void Shader::UpdateTime(const float& time)
+{
+    if (shader_default != nullptr)
+    {
+        shader_default->Use();
+        shader_default->SetFloat("time", time);
+    }
+}

@@ -1,7 +1,6 @@
 #pragma once 
 
 #include <string>
-#include <emscripten/html5.h>
 
 #include <Shader.h>
 
@@ -19,7 +18,6 @@ class CanvasRenderer
     protected:
         std::string _canvasID;
         ShaderID _shaderID;
-        EMSCRIPTEN_WEBGL_CONTEXT_HANDLE _contextWebGL;
         unsigned int _VAO;
         unsigned int _VBO;
 };

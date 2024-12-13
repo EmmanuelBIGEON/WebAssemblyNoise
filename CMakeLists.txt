@@ -20,6 +20,7 @@ include_directories(
 set(SRCS 
     src/main.cpp
 
+    src/util/Chrono.cpp
     src/util/Directory.cpp
     src/util/Logger.cpp
     src/core/common/CanvasRenderer.cpp

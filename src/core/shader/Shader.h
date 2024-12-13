@@ -32,6 +32,9 @@ class Shader
 
         static void UpdateResolution(const glm::vec2& resolution);
         static void UpdateResolution(unsigned int width, unsigned int height);
+
+        static void UpdateTime(const float& time);
+
     protected:
         static Shader* shader_default;
 

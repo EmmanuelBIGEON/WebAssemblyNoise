@@ -2,6 +2,7 @@
 precision highp float;
 
 uniform vec2 resolution;
+uniform float time;
 out vec4 color;
 
 // 2D Random
@@ -38,7 +39,7 @@ float noise (in vec2 st) {
 void main()
 {
     vec2 uv = gl_FragCoord.xy / resolution;
-    uv = vec2(uv*50.0);
+    uv = vec2(uv*50.0) + time;
     float n = noise(uv);
     color = vec4(vec3(n), 1.0);
 } 

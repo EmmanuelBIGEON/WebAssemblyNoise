@@ -1,6 +1,7 @@
 #pragma once 
 
-#include "CanvasRenderer.h"
+#include <CanvasRenderer.h>
+#include <Chrono.h>
 
 #include <vector> 
 
@@ -23,4 +24,6 @@ class Application
 
     protected:
         std::vector<std::shared_ptr<CanvasRenderer>> _canvasList;
+
+        Chrono _chrono;
 };

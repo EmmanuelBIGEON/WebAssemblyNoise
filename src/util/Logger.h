@@ -10,4 +10,5 @@ class Logger
         static void Log(unsigned long value);
         static void Log(unsigned int value);
         static void Log(int value);
+        static void Log(float value);
 };

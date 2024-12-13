@@ -9,6 +9,8 @@
 #include <GLES3/gl3.h>
 #include <EGL/egl.h>
 
+#include <chrono>
+
 void initEGL();
 void DumpGLInfo();
 
@@ -21,7 +23,7 @@ int main(int argc, char**argv)
     Shader::UpdateResolution(WebData::GetCanvaWidth(), WebData::GetCanvaHeight());
 
     Application* app = Application::GetApp();
- 
+
     app->AddCanvas("#canvas");     
 
     emscripten_set_main_loop([](){ Application::GetApp()->RenderAll(); }, 0, 1);

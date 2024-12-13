@@ -26,3 +26,8 @@ void Logger::Log(int value)
 {
     EM_ASM({console.log(Module.UTF8ToString($0))}, std::to_string(value).c_str());
 }
+
+void Logger::Log(float value)
+{
+    EM_ASM({console.log(Module.UTF8ToString($0))}, std::to_string(value).c_str());
+}
