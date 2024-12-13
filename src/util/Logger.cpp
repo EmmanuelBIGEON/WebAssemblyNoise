@@ -16,3 +16,13 @@ void Logger::Log(unsigned long value)
 {
     EM_ASM({console.log(Module.UTF8ToString($0))}, std::to_string(value).c_str());
 }
+
+void Logger::Log(unsigned int value)
+{
+    EM_ASM({console.log(Module.UTF8ToString($0))}, std::to_string(value).c_str());
+}
+
+void Logger::Log(int value)
+{
+    EM_ASM({console.log(Module.UTF8ToString($0))}, std::to_string(value).c_str());
+}

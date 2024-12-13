@@ -1,15 +1,16 @@
 #include "CanvasRenderer.h"
 
-#include <GLES2/gl2.h>
+#include <GLES3/gl3.h>
 #include <Logger.h>
 
+float vertices[] = {
+    -1.0f, -1.0f,
+     1.0f, -1.0f,
+    -1.0f,  1.0f,
+     1.0f,  1.0f
+};
 
-float getElapsedTime() {
-    static clock_t startTime = clock();
-    return float(clock() - startTime) / CLOCKS_PER_SEC;
-}
-
-CanvasRenderer::CanvasRenderer(const std::string& canvasID) : _canvasID(canvasID)
+CanvasRenderer::CanvasRenderer(const std::string& canvasID, ShaderID shaderID) : _canvasID(canvasID), _VAO(0), _VBO(0), _shaderID(shaderID)
 {
 }
 
@@ -19,25 +20,23 @@ CanvasRenderer::~CanvasRenderer()
 
 bool CanvasRenderer::Init()
 {
-    EMSCRIPTEN_WEBGL_CONTEXT_HANDLE emctx = emscripten_webgl_get_current_context();
-    EmscriptenWebGLContextAttributes attr;
-    emscripten_webgl_init_context_attributes(&attr);
-    _contextWebGL = emscripten_webgl_create_context(_canvasID.c_str(), &attr);
-    if(_contextWebGL == 0) {
-        const std::string& error = "CanvasRenderer::Init failed creation of context. CanvasID = " + _canvasID;
-        Logger::Log(error);
-        return false;
-    }
-    const std::string& message = "CanvasRenderer::Init context successfully created. CanvasID = " + _canvasID;
-    Logger::Log(message);
+    glGenVertexArrays(1, &_VAO);
+    glGenBuffers(1, &_VBO);
+
+    glBindVertexArray(_VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
     return true;
 }
 
 void CanvasRenderer::Render()
 {
-    emscripten_webgl_make_context_current(_contextWebGL);
-    float time = getElapsedTime();
-    float value = (sin(time) + 1.0f) / 2.0f; 
-    glClearColor(value, 1.0 - value, 1.0 - value, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    Shader::GetShader(_shaderID)->Use();
+    glBindVertexArray(_VAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
 }

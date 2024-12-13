@@ -1,16 +1,13 @@
 #include "Shader.h"
 
-#ifdef __EMSCRIPTEN__
 #include <GLES3/gl3.h>
-#else
-#include <glad/glad.h>
-#endif
-
-#include <iostream>
+#include <Logger.h>
 #include <fstream>
 #include <sstream>
 
 #include <glm/ext.hpp>
+
+Shader* Shader::shader_default = nullptr;
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
@@ -44,7 +41,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     if (!success)
     {
         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED" << std::endl << infoLog << std::endl;
+        Logger::Log("ERROR::SHADER::VERTEX::COMPILATION_FAILED" + std::string(infoLog));
     }
 
     unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -55,7 +52,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     if (!success)
     {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED" << std::endl << infoLog << std::endl;
+        Logger::Log("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED" + std::string(infoLog));
     }
 
     shaderID = glCreateProgram();
@@ -67,10 +64,10 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     if (!success)
     {
         glGetProgramInfoLog(shaderID, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED" << std::endl << infoLog << std::endl;
+        Logger::Log("ERROR::SHADER::PROGRAM::LINKING_FAILED" + std::string(infoLog));
     }
     
-    std::cout << "Shader created." << std::endl;
+    Logger::Log("Shader created.");
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
@@ -134,12 +131,15 @@ void Shader::SetMat4(const char* name, const glm::mat4& value) const
 
 void Shader::InitShaders()
 {
+    shader_default = new Shader("shaders/default.vs", "shaders/default.fs");
 }
 
 Shader* Shader::GetShader(ShaderID shader)
 {
     switch (shader)
     {
+        case ShaderID_DEFAULT:
+            return shader_default;
         default:
             throw new std::runtime_error("Couldn't find shader.");
             return nullptr;

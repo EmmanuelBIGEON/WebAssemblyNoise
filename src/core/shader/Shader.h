@@ -4,6 +4,7 @@
 
 enum ShaderID
 {
+    ShaderID_DEFAULT = 1
 };
 
 class Shader
@@ -24,11 +25,12 @@ class Shader
         void SetMat3(const char* name, const glm::mat3& value) const;
         void SetMat4(const char* name, const glm::mat4& value) const;
 
-        unsigned int shaderID;
+        unsigned int shaderID; // Different than the enum ShaderID, this one comes from OpenGL
 
         static void InitShaders();
         static Shader* GetShader(ShaderID shader);
 
     protected:
+        static Shader* shader_default;
 
 };
