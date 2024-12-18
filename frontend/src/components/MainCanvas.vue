@@ -10,6 +10,14 @@ export default {
 
   mounted () {
     // Import the WebAssembly app
+    const canvas = document.getElementById('canvas')
+    const gl = canvas.getContext('webgl2',
+      { alpha: false, // performance improvement ? dunno.
+        depth: true,
+        antialias: true, // doesn't work.. do i need a framebuffer ?
+        preserveDrawingBuffer: false,
+        stencil: true 
+      });
     const script = document.createElement('script');
     script.src = 'WebAssemblyNoise.js';
     

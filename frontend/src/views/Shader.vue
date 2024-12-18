@@ -5,8 +5,8 @@
     
     <div id="ShaderView_content">
       <div class="flexinitial" style="justify-items: center;">
-        <select class="selector">
-          <option v-for="shader in shaders" :value="shader.id"> {{ shader.name }}</option>
+        <select class="selector" v-model="selectedShader">
+          <option v-for="shader in shaders" :value="shader.id" > {{ shader.name }}</option>
         </select>
         <MainCanvas @moduleLoaded="OnModuleLoad"/>
       </div>  
@@ -26,7 +26,8 @@ export default {
   data () {
     return {
       shaders: [],
-      currentShaderCode: "hello"
+      currentShaderCode: "hello",
+      selectedShader: 1
     }
   },
   components: { MainCanvas, Editor },
@@ -35,10 +36,18 @@ export default {
       this.shaders = JSON.parse(WANModule.GetShadersJSON())
       if(this.shaders.length)
       {
-        WANModule.DisplayShader(this.shaders[0].id)
+        this.selectedShader = this.shaders[1].id
+        WANModule.DisplayShader(this.shaders[1].id)
         this.currentShaderCode = WANModule.GetCurrentShaderCode();
       }
     }
+  },
+
+  watch: { 
+      selectedShader: function(newVal, oldVal) {
+        WANModule.DisplayShader(newVal)
+        this.currentShaderCode = WANModule.GetCurrentShaderCode();
+      }
   }
 }
 </script>

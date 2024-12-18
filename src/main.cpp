@@ -51,6 +51,8 @@ void initEGL()
     }
 
     eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, contextegl);
+
+    glEnable(GL_MULTISAMPLE);
 }
 
 void DumpGLInfo()

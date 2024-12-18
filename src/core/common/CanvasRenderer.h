@@ -1,8 +1,10 @@
 #pragma once 
 
 #include <string>
+#include <vector>
 
 #include <Shader.h>
+#include <glm/ext.hpp>
 
 //! \class CanvasRenderer
 //! \brief Render a canvas. Voluntarily simplified as we will only use a rectangle to render.

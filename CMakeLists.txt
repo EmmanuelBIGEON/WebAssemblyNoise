@@ -23,6 +23,7 @@ set(SRCS
 
     src/util/Chrono.cpp
     src/util/Directory.cpp
+    src/util/Generator.cpp
     src/util/Logger.cpp
     src/core/common/CanvasRenderer.cpp
     src/core/common/Application.cpp

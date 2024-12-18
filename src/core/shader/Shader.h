@@ -6,7 +6,8 @@
 
 enum ShaderID
 {
-    ShaderID_DEFAULT = 1
+    ShaderID_DEFAULT = 1,
+    ShaderID_GABOR
 };
 
 class Shader
@@ -44,6 +45,7 @@ class Shader
 
     protected:
         static Shader* shader_default;
+        static Shader* shader_gabor;
         
         std::string _vertexCode;
         std::string _fragmentCode;
