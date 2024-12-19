@@ -12,6 +12,7 @@
 
 Shader* Shader::shader_default = nullptr;
 Shader* Shader::shader_gabor = nullptr;
+Shader* Shader::shader_screen = nullptr;
 glm::vec2 Shader::remembered_resolution = glm::vec2();
 float Shader::remembered_time = 1.0f;
 
@@ -140,6 +141,11 @@ void Shader::SetMat4(const char* name, const glm::mat4& value) const
 
 void Shader::InitShaders()
 {
+    shader_screen = new Shader("shaders/screen.vs", "shaders/screen.fs");
+    shader_screen->shaderName = "Screen";
+    shader_screen->Use();
+    shader_screen->SetInt("screenTexture", 0);
+
     shader_default = new Shader("shaders/default.vs", "shaders/default.fs");
     shader_default->shaderName = "Default";
 
@@ -159,6 +165,11 @@ Shader* Shader::GetShader(ShaderID shader)
             throw new std::runtime_error("Couldn't find shader.");
             return nullptr;
     }
+}
+
+Shader* Shader::GetScreenShader()
+{
+    return shader_screen;
 }
 
 std::string Shader::GetShadersListJSON()

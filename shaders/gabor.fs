@@ -196,7 +196,7 @@ void main() {
     	if(p.x>0.)windows =3;
         else windows =2;}
     //comment the following line to see windows
-    //windows =3;
+    windows =3;
    
       
    	p += .2*m*time;

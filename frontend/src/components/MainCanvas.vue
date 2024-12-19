@@ -1,5 +1,5 @@
 <template>
-  <canvas id="canvas" oncontextmenu="event.preventDefault()" contenteditable="false">
+  <canvas id="canvas" oncontextmenu="event.preventDefault()" contenteditable="false" width="400" height="400">
   </canvas> 
 </template>
 
@@ -13,10 +13,11 @@ export default {
     const canvas = document.getElementById('canvas')
     const gl = canvas.getContext('webgl2',
       { alpha: false, // performance improvement ? dunno.
-        depth: true,
+        depth: false,
         antialias: true, // doesn't work.. do i need a framebuffer ?
-        preserveDrawingBuffer: false,
-        stencil: true 
+        preserveDrawingBuffer: true,
+        powerPreference: "high-performance",
+        stencil: false 
       });
     const script = document.createElement('script');
     script.src = 'WebAssemblyNoise.js';
@@ -34,8 +35,6 @@ export default {
 #canvas
 {
   display:block;
-  width:400px;
-  height:400px;
   padding: 30px;
   margin:left;
   margin:right;

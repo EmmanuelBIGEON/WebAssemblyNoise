@@ -25,4 +25,18 @@ class CanvasRenderer
         ShaderID _shaderID;
         unsigned int _VAO;
         unsigned int _VBO;
+        unsigned int _screenVAO;
+        unsigned int _screenVBO;
+
+        unsigned int canvasWidth;
+        unsigned int canvasHeight;
+
+        // WebGL2 doesn't support MSAA textures. 
+        // Apparently it is because browsers doesn't render canvas this way
+        // https://stackoverflow.com/questions/50613696/whats-the-purpose-of-multisample-renderbuffers
+        unsigned int FBORenderSampling; 
+        unsigned int RBOSampling;
+
+        unsigned int FBOTexture;
+        unsigned int colorTexture;
 };

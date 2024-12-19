@@ -2,6 +2,7 @@
 
 #include <Shader.h>
 #include <Logger.h>
+#include <GLES3/gl3.h>
 
 Application* Application::instance = nullptr;
 
@@ -31,8 +32,9 @@ void Application::RenderAll()
 {
     // update uniform time.
     const auto& timeElapsed = _chrono.GetCurrentDuration();
-    Shader::UpdateTime(timeElapsed);  
+    Shader::UpdateTime(timeElapsed); 
 
+    glClear(GL_COLOR_BUFFER_BIT);
     for(const auto& canvas : _canvasList)
     {
         canvas->Render();

@@ -36,6 +36,7 @@ class Shader
 
         static void InitShaders();
         static Shader* GetShader(ShaderID shader);
+        static Shader* GetScreenShader();
         static std::string GetShadersListJSON(); // produce a JSON List of the available shaders 
 
         static void UpdateResolution(const glm::vec2& resolution);
@@ -46,6 +47,9 @@ class Shader
     protected:
         static Shader* shader_default;
         static Shader* shader_gabor;
+
+
+        static Shader* shader_screen;
         
         std::string _vertexCode;
         std::string _fragmentCode;
