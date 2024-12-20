@@ -7,7 +7,8 @@
 enum ShaderID
 {
     ShaderID_DEFAULT = 1,
-    ShaderID_GABOR
+    ShaderID_GABOR,
+    ShaderID_GABOR2
 };
 
 class Shader
@@ -47,6 +48,7 @@ class Shader
     protected:
         static Shader* shader_default;
         static Shader* shader_gabor;
+        static Shader* shader_gabor2;
 
 
         static Shader* shader_screen;

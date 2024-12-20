@@ -12,6 +12,7 @@
 
 Shader* Shader::shader_default = nullptr;
 Shader* Shader::shader_gabor = nullptr;
+Shader* Shader::shader_gabor2 = nullptr;
 Shader* Shader::shader_screen = nullptr;
 glm::vec2 Shader::remembered_resolution = glm::vec2();
 float Shader::remembered_time = 1.0f;
@@ -151,6 +152,9 @@ void Shader::InitShaders()
 
     shader_gabor = new Shader("shaders/default.vs", "shaders/gabor.fs");
     shader_gabor->shaderName = "Gabor";
+
+    shader_gabor2 = new Shader("shaders/default.vs", "shaders/gabor2.fs");
+    shader_gabor2->shaderName = "Gabor2";
 }
 
 Shader* Shader::GetShader(ShaderID shader)
@@ -161,6 +165,8 @@ Shader* Shader::GetShader(ShaderID shader)
             return shader_default;
         case ShaderID_GABOR:
             return shader_gabor;
+        case ShaderID_GABOR2:
+            return shader_gabor2;
         default:
             throw new std::runtime_error("Couldn't find shader.");
             return nullptr;
@@ -182,6 +188,10 @@ std::string Shader::GetShadersListJSON()
         {
             {"name", shader_gabor->shaderName},
             {"id", ShaderID_GABOR}
+        },
+        {
+            {"name", shader_gabor2->shaderName},
+            {"id", ShaderID_GABOR2}
         }
     };
     return json.dump();
@@ -199,6 +209,11 @@ void Shader::UpdateResolution(const glm::vec2& resolution)
     {
         shader_gabor->Use();
         shader_gabor->SetVec2("resolution", resolution);
+    }
+    if (shader_gabor2 != nullptr)
+    {
+        shader_gabor2->Use();
+        shader_gabor2->SetVec2("resolution", resolution);
     }
 }
 
@@ -219,6 +234,11 @@ void Shader::UpdateTime(const float& time)
     {
         shader_gabor->Use();
         shader_gabor->SetFloat("time", time);
+    }
+    if (shader_gabor2 != nullptr)
+    {
+        shader_gabor2->Use();
+        shader_gabor2->SetFloat("time", time);
     }
 }
 
